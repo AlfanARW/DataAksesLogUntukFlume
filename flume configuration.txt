@@ -1,0 +1,30 @@
+cat > flume.conf <<EOF
+# --- Definisi Komponen ---
+agent1.sources = source1
+agent1.sinks = sink1
+agent1.channels = channel1
+
+# --- Source: Membaca Folder Lokal ---
+agent1.sources.source1.type = spooldir
+agent1.sources.source1.spoolDir = /tmp/flume_sumber
+agent1.sources.source1.fileHeader = true
+agent1.sources.source1.basenameHeader = true
+
+# --- Sink: Mengirim ke HDFS ---
+agent1.sinks.sink1.type = hdfs
+agent1.sinks.sink1.hdfs.path = /flume_tujuan
+agent1.sinks.sink1.hdfs.fileType = DataStream
+agent1.sinks.sink1.hdfs.writeFormat = Text
+agent1.sinks.sink1.hdfs.rollInterval = 0
+agent1.sinks.sink1.hdfs.rollSize = 0
+agent1.sinks.sink1.hdfs.rollCount = 0
+
+# --- Channel: Memori Buffer ---
+agent1.channels.channel1.type = memory
+agent1.channels.channel1.capacity = 1000
+agent1.channels.channel1.transactionCapacity = 100
+
+# --- Binding ---
+agent1.sources.source1.channels = channel1
+agent1.sinks.sink1.channel = channel1
+EOF
